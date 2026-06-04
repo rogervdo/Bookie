@@ -12,6 +12,8 @@ frontend/dist/
 
 # Models & caches
 .cache/
+backend/data/
+!backend/data/.gitkeep
 *.wav
 *.mp3
 

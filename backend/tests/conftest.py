@@ -1,7 +1,11 @@
 import numpy as np
 import pytest
+import pytest_asyncio
 from fastapi.testclient import TestClient
+from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.db import init_db, reset_engine
+from app.db.session import get_session_factory
 from app.main import create_app
 from app.tts.kokoro import DEFAULT_VOICE, VOICES, KokoroEngine
 
@@ -69,8 +73,19 @@ def mock_engine() -> MockEngine:
 @pytest.fixture
 def client(mock_engine: MockEngine, monkeypatch):
     monkeypatch.setattr("app.main.engine", mock_engine)
-    app = create_app(preload_on_startup=False)
+    app = create_app(preload_on_startup=False, init_database=False)
     return TestClient(app)
+
+
+@pytest_asyncio.fixture
+async def db_session(monkeypatch) -> AsyncSession:
+    monkeypatch.setenv("DATABASE_URL", "sqlite+aiosqlite:///:memory:")
+    await reset_engine()
+    await init_db()
+    factory = get_session_factory()
+    async with factory() as session:
+        yield session
+    await reset_engine()
 
 
 @pytest.fixture

@@ -5,17 +5,22 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import Response
 
+from app.db import init_db, reset_engine
 from app.schemas import HealthResponse, SynthesizeRequest
 from app.tts import engine, preload
 
 
-def create_app(*, preload_on_startup: bool = True) -> FastAPI:
+def create_app(*, preload_on_startup: bool = True, init_database: bool = True) -> FastAPI:
     @asynccontextmanager
     async def lifespan(app: FastAPI):
+        if init_database:
+            await init_db()
         if preload_on_startup:
             loop = asyncio.get_event_loop()
             loop.run_in_executor(None, preload)
         yield
+        if init_database:
+            await reset_engine()
 
     application = FastAPI(title="Speaking TTS", lifespan=lifespan)
 
