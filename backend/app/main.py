@@ -6,6 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import Response
 
 from app.db import init_db, reset_engine
+from app.library.routes import router as library_router
 from app.schemas import HealthResponse, SynthesizeRequest
 from app.tts import engine, preload
 
@@ -31,6 +32,8 @@ def create_app(*, preload_on_startup: bool = True, init_database: bool = True) -
         allow_methods=["*"],
         allow_headers=["*"],
     )
+
+    application.include_router(library_router)
 
     @application.get("/api/health", response_model=HealthResponse)
     async def health() -> HealthResponse:

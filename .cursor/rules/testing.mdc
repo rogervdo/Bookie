@@ -1,0 +1,22 @@
+---
+description: How to run backend and frontend tests in Speaking
+alwaysApply: true
+---
+
+# Testing
+
+Use `backend/.venv` (Python 3.10). See also [AGENTS.md](../../AGENTS.md).
+
+```bash
+cd backend && source .venv/bin/activate && pytest -q
+cd frontend && npm test -- --run
+cd backend && source .venv/bin/activate && pytest tests/test_inner_game_pdf.py -v
+```
+
+Full suite from repo root:
+
+```bash
+cd backend && source .venv/bin/activate && pytest -q && cd ../frontend && npm test -- --run
+```
+
+Expect **54** pytest + **10** vitest tests. PDF fixture: `backend/tests/The Inner Game*.pdf`.

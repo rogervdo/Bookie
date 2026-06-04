@@ -21,4 +21,5 @@ backend/data/
 .DS_Store
 .env
 .env.local
+backend/certs/*.pem
 *.log

@@ -7,7 +7,7 @@ from sqlalchemy.ext.asyncio import (
     create_async_engine,
 )
 
-from app.config import get_database_url, is_sqlite
+from app.config import get_async_engine_config
 
 _engine: AsyncEngine | None = None
 _session_factory: async_sessionmaker[AsyncSession] | None = None
@@ -16,8 +16,7 @@ _session_factory: async_sessionmaker[AsyncSession] | None = None
 def get_engine() -> AsyncEngine:
     global _engine
     if _engine is None:
-        url = get_database_url()
-        connect_args = {"check_same_thread": False} if is_sqlite(url) else {}
+        url, connect_args = get_async_engine_config()
         _engine = create_async_engine(url, connect_args=connect_args)
     return _engine
 

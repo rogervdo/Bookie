@@ -2,7 +2,7 @@ from dataclasses import dataclass, field
 from typing import Optional, Protocol
 
 
-MAX_TEXT_LENGTH = 500
+MAX_TEXT_LENGTH = 9000
 
 
 @dataclass

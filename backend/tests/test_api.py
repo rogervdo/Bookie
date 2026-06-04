@@ -40,7 +40,7 @@ def test_synthesize_rejects_empty_text(client: TestClient):
 
 
 def test_synthesize_rejects_text_over_limit(client: TestClient):
-    response = client.post("/api/synthesize", json={"text": "x" * 501})
+    response = client.post("/api/synthesize", json={"text": "x" * 9001})
     assert response.status_code == 422
 
 
